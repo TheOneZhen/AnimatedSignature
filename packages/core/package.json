@@ -1,0 +1,19 @@
+{
+  "name": "animated-signature-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vite",
+    "build": "vite build"
+  },
+  "author": "Z",
+  "license": "ISC",
+  "dependencies": {
+    "lodash-es": "^4.17.21",
+    "signature_pad": "^4.1.7"
+  },
+  "devDependencies": {
+    "vite": "^5.0.10"
+  }
+}

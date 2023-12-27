@@ -1,0 +1,17 @@
+{
+  "name": "z-animated-signature",
+  "packageManager": "pnpm@8.12.1",
+  "engines": {
+    "node": ">=18",
+    "npm": ">=8"
+  },
+  "scripts": {
+    "start": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "prettier": "^3.1.1",
+    "typescript": "~5.3.3"
+  },
+  "browserslist": []
+}
