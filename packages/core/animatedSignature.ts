@@ -192,12 +192,24 @@ export default class AnimatedSignature extends SignaturePad {
 
     if (drawingMode === "even") {
       const lengths = Array(strokes).fill(0);
+      const newDuration = duration - gap * (strokes - 1)
       record.forEach(
         (item, index) =>
           (lengths[index % strokes] += item.isDot
             ? item.radius
             : item.partLength)
       );
+      
+      record.forEach((item, index) => {
+        if (item.isDot) {
+          const dom = item.data[0].circle
+          dom.className += ` ${classPrefix}element $`
+          dom.style.animationDuration = `${item.radius / lengths[index] * newDuration}ms`
+          dom.style.animationDelay = ``
+        } else {
+          item.data.forEach
+        }
+      })
     }
   }
 
