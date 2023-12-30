@@ -31,4 +31,4 @@ totalLength
 (duration - gap * (strokes - 1)) * (path.end - path.start) / totalTime
 
 
-dot 怎么办？？？
+even时，dot按长度，反之按固定时间

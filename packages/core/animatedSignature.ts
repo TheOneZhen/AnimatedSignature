@@ -7,15 +7,15 @@ import SignaturePad, {
   PointGroupOptions,
 } from "signature_pad";
 
-import { Bezier } from "signature_pad/dist/types/bezier";
-import { BasicPoint, Point } from "signature_pad/dist/types/point";
+import { Bezier } from "signature_pad/src/bezier";
+import { BasicPoint, Point } from "signature_pad/src/point";
 
 /** 没有校验 */
 export type AnimatedSignatureOptions = {
   /**
    * animation duration
    * @unit ms
-   * @default 1000
+   * @default 10000
    */
   duration: number;
   /**
@@ -68,10 +68,10 @@ export type RecordComposition<T = "line" | "dot"> = T extends "dot"
       options: PointGroupOptions;
       isDot: true;
       radius: ReturnType<Bezier["length"]>;
-      data: Array<{
+      data: {
         circle: HTMLElement;
         point: BasicPoint;
-      }>;
+      };
     }
   : {
       options: PointGroupOptions;
@@ -88,9 +88,8 @@ export type RecordComposition<T = "line" | "dot"> = T extends "dot"
 export default class AnimatedSignature extends SignaturePad {
   protected redoStack: PointGroup[] = [];
 
-  public signaturePad: SignaturePad;
   public options: AnimatedSignatureOptions = {
-    duration: 1000,
+    duration: 10000,
     strokes: 1,
     classPrefix: "sign-",
     animationName: "animatedSignature",
@@ -104,10 +103,10 @@ export default class AnimatedSignature extends SignaturePad {
 
   constructor(
     canvas: HTMLCanvasElement,
-    options: AnimatedSignatureOptions,
+    options: { [Prop in keyof AnimatedSignatureOptions]?: AnimatedSignatureOptions[Prop] },
     signaturePadOptions: SignaturePadOptions /** 所有属性都变成可选 */
   ) {
-    if (canvas) throw new Error(Errors.CANVAS_NOT_EXIST);
+    if (!canvas) throw new Error(Errors.CANVAS_NOT_EXIST);
     super(canvas, signaturePadOptions);
     /**
      * 更改SignaturePad中的clear方法
@@ -132,49 +131,43 @@ export default class AnimatedSignature extends SignaturePad {
   }
   /** 开始绘制 */
   handleDraw() {
-    this.signaturePad.compositeOperation = "source-over";
+    this.compositeOperation = "source-over";
   }
   /** 签名上色 */
   handleColor() {
-    this.signaturePad.compositeOperation = "source-atop";
+    this.compositeOperation = "source-atop";
   }
   /** 改变画笔颜色 */
   changePenColor(color: string) {
-    this.signaturePad.penColor = color;
+    this.penColor = color;
   }
   handleClear() {
-    this.signaturePad.clear();
+    this.clear();
   }
   /** 撤销 */
   undo() {
-    const data = this.signaturePad.toData();
+    const data = this.toData();
     const middle = data.pop();
     middle && this.redoStack.push(middle);
   }
   /** 重做 */
   redo() {
-    const data = this.signaturePad.toData();
+    const data = this.toData();
     const middle = this.redoStack.pop();
     middle && data.push(middle);
   }
 
   generateCode(toSVGOptions: ToSVGOptions = {}) {
     const { svg, record } = this.options.toSVG.call(
-      this.signaturePad,
+      this,
       toSVGOptions
     );
+
+    this.calcStyle(record)
+
     const style = document.createElement("style");
 
     style.innerHTML = this.generateCommonStyle();
-
-    const delayEven = this.delay / result.map.size;
-    let index = 0;
-
-    for (const [sign, element] of result.map.entries()) {
-      element.className += ` ${this.attrPrefix}element ${sign}`;
-      element.style.animationDelay = `${delayEven * index}ms`;
-      index++;
-    }
 
     return { svg, style };
   }
@@ -192,24 +185,34 @@ export default class AnimatedSignature extends SignaturePad {
 
     if (drawingMode === "even") {
       const lengths = Array(strokes).fill(0);
-      const newDuration = duration - gap * (strokes - 1)
+      const newDuration = duration - gap * (strokes - 1);
       record.forEach(
         (item, index) =>
           (lengths[index % strokes] += item.isDot
             ? item.radius
             : item.partLength)
       );
-      
+
       record.forEach((item, index) => {
+        const relatedIndex = index % strokes;
         if (item.isDot) {
-          const dom = item.data[0].circle
-          dom.className += ` ${classPrefix}element $`
-          dom.style.animationDuration = `${item.radius / lengths[index] * newDuration}ms`
-          dom.style.animationDelay = ``
+          const { circle } = item.data;
+          circle.className += ` ${classPrefix}element ${classPrefix}circle`;
+          circle.style.animationDuration = `${
+            (item.radius / lengths[relatedIndex]) * newDuration
+          }ms`;
+          circle.style.animationDelay = `${relatedIndex * gap}ms`;
         } else {
-          item.data.forEach
+          let delay = relatedIndex * gap;
+          item.data.forEach(({ curve, path, length }) => {
+            const pathDuration = (length / lengths[relatedIndex]) * newDuration;
+            path.className += ` ${classPrefix}element ${classPrefix}path`;
+            path.style.animationDuration = `${pathDuration}ms`;
+            path.style.animationDelay = `${delay}ms`;
+            delay += pathDuration;
+          });
         }
-      })
+      });
     }
   }
 
@@ -236,7 +239,6 @@ export default class AnimatedSignature extends SignaturePad {
         animation-name: animatedSignature;
         animation-timing-function: cubic-bezier(0, -0.8, 0, 0);
         animation-fill-mode: both;
-        animation-duration: 133.333ms;
         animation-iteration-count: 1;
       }
     `;
@@ -363,12 +365,10 @@ function toSVG({ includeBackgroundColor = false }: ToSVGOptions = {}) {
         options: pointGroupOptions,
         isDot: true,
         radius: dotSize > 0 ? dotSize : (minWidth + maxWidth) / 2,
-        data: [
-          {
-            circle: drawDot(points[0], pointGroupOptions),
-            point: points[0],
-          },
-        ],
+        data: {
+          circle: drawDot(points[0], pointGroupOptions),
+          point: points[0],
+        },
       });
     }
   }
