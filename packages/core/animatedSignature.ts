@@ -13,11 +13,12 @@ import { BasicPoint, Point } from "signature_pad/src/point";
 /** 没有校验 */
 export type AnimatedSignatureOptions = {
   /**
-   * animation duration
+   * 每条连线完全显示需要的时间
+   * each strokes display the time required
    * @unit ms
    * @default 10000
    */
-  duration: number;
+  strokeDuration: number;
   /**
    * stoke number
    * @default 1
@@ -82,14 +83,14 @@ export type RecordComposition<T = "line" | "dot"> = T extends "dot"
         length: ReturnType<Bezier["length"]>;
       }>;
       partLength: ReturnType<Bezier["length"]>;
-      partTime: AnimatedSignatureOptions["duration"];
+      partTime: AnimatedSignatureOptions["strokeDuration"];
     };
 
 export default class AnimatedSignature extends SignaturePad {
   protected redoStack: PointGroup[] = [];
 
   public options: AnimatedSignatureOptions = {
-    duration: 10000,
+    strokeDuration: 2000,
     strokes: 1,
     classPrefix: "sign-",
     animationName: "animatedSignature",
@@ -103,7 +104,9 @@ export default class AnimatedSignature extends SignaturePad {
 
   constructor(
     canvas: HTMLCanvasElement,
-    options: { [Prop in keyof AnimatedSignatureOptions]?: AnimatedSignatureOptions[Prop] },
+    options: {
+      [Prop in keyof AnimatedSignatureOptions]?: AnimatedSignatureOptions[Prop];
+    },
     signaturePadOptions: SignaturePadOptions /** 所有属性都变成可选 */
   ) {
     if (!canvas) throw new Error(Errors.CANVAS_NOT_EXIST);
@@ -126,7 +129,7 @@ export default class AnimatedSignature extends SignaturePad {
     this.options.strokes = Math.max(1, this.options.strokes);
     this.options.gap = Math.min(
       Math.max(0, this.options.gap),
-      this.options.duration
+      this.options.strokeDuration
     );
   }
   /** 开始绘制 */
@@ -158,12 +161,9 @@ export default class AnimatedSignature extends SignaturePad {
   }
 
   generateCode(toSVGOptions: ToSVGOptions = {}) {
-    const { svg, record } = this.options.toSVG.call(
-      this,
-      toSVGOptions
-    );
+    const { svg, record } = this.options.toSVG.call(this, toSVGOptions);
 
-    this.calcStyle(record)
+    this.calcStyle(record);
 
     const style = document.createElement("style");
 
@@ -174,7 +174,7 @@ export default class AnimatedSignature extends SignaturePad {
 
   calcStyle(record: Array<RecordComposition>) {
     const {
-      duration,
+      strokeDuration,
       strokes,
       classPrefix,
       drawingMode,
@@ -185,32 +185,34 @@ export default class AnimatedSignature extends SignaturePad {
 
     if (drawingMode === "even") {
       const lengths = Array(strokes).fill(0);
-      const newDuration = duration - gap * (strokes - 1);
+      const delays = Array(strokes).fill(0);
+
       record.forEach(
         (item, index) =>
-          (lengths[index % strokes] += item.isDot
-            ? item.radius
-            : item.partLength)
+          !item.isDot && (lengths[index % strokes] += item.partLength)
       );
 
       record.forEach((item, index) => {
         const relatedIndex = index % strokes;
         if (item.isDot) {
           const { circle } = item.data;
+          const animationDuration =
+            (item.radius / lengths[relatedIndex]) * newDuration;
+
           circle.className += ` ${classPrefix}element ${classPrefix}circle`;
-          circle.style.animationDuration = `${
-            (item.radius / lengths[relatedIndex]) * newDuration
-          }ms`;
-          circle.style.animationDelay = `${relatedIndex * gap}ms`;
+          circle.style.animationDuration = `${animationDuration}ms`;
+          circle.style.animationDelay = `${delays[relatedIndex]}ms`;
+          delays[relatedIndex] += animationDuration + gap;
         } else {
-          let delay = relatedIndex * gap;
           item.data.forEach(({ curve, path, length }) => {
-            const pathDuration = (length / lengths[relatedIndex]) * newDuration;
+            const animationDuration =
+              (length / lengths[relatedIndex]) * newDuration;
             path.className += ` ${classPrefix}element ${classPrefix}path`;
-            path.style.animationDuration = `${pathDuration}ms`;
-            path.style.animationDelay = `${delay}ms`;
-            delay += pathDuration;
+            path.style.animationDuration = `${animationDuration}ms`;
+            path.style.animationDelay = `${delays[relatedIndex]}ms`;
+            delays[relatedIndex] += animationDuration;
           });
+          delays[relatedIndex] += gap;
         }
       });
     }

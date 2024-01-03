@@ -4,7 +4,11 @@ import SignaturePad from "signature_pad";
 const canvas = document.createElement("canvas");
 const container = document.getElementById("app")!;
 const button = document.createElement("button");
-const animatedSignature = new AnimatedSignature(canvas, { duration: 2000, strokes: 4 }, {});
+const animatedSignature = new AnimatedSignature(
+  canvas,
+  { duration: 2000, strokes: 3, gap: 100 },
+  {}
+);
 const div = document.createElement("div");
 // const middle = new SignaturePad(canvas);
 
