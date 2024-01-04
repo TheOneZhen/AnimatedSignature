@@ -6,7 +6,7 @@ const container = document.getElementById("app")!;
 const button = document.createElement("button");
 const animatedSignature = new AnimatedSignature(
   canvas,
-  { duration: 2000, strokes: 3, gap: 100 },
+  { duration: [2000], gap: 1000, drawingMode: "parallel" },
   {}
 );
 const div = document.createElement("div");

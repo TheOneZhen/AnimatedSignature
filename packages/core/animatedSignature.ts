@@ -1,4 +1,4 @@
-import { uniqueId } from "lodash-es";
+import { uniqueId, isNumber, isArray } from "lodash-es";
 import { Errors } from "./errors";
 import SignaturePad, {
   Options as SignaturePadOptions,
@@ -16,15 +16,9 @@ export type AnimatedSignatureOptions = {
    * 每条连线完全显示需要的时间
    * each strokes display the time required
    * @unit ms
-   * @default 10000
+   * @default [10000]
    */
-  strokeDuration: number;
-  /**
-   * stoke number
-   * @default 1
-   * @min 1
-   */
-  strokes: number;
+  duration: number[];
   /**
    * prefix of class name
    */
@@ -47,7 +41,6 @@ export type AnimatedSignatureOptions = {
   /**
    * @default 0
    * @min 0
-   * @max duration
    */
   gap: number;
   /**
@@ -83,24 +76,16 @@ export type RecordComposition<T = "line" | "dot"> = T extends "dot"
         length: ReturnType<Bezier["length"]>;
       }>;
       partLength: ReturnType<Bezier["length"]>;
-      partTime: AnimatedSignatureOptions["strokeDuration"];
+      partTime: number;
     };
 
 export default class AnimatedSignature extends SignaturePad {
   protected redoStack: PointGroup[] = [];
 
-  public options: AnimatedSignatureOptions = {
-    strokeDuration: 2000,
-    strokes: 1,
-    classPrefix: "sign-",
-    animationName: "animatedSignature",
-    backgroundColor: "rgba(0,0,0,0)",
-    drawingMode: "even",
-    gap: 0,
-    dotDuration: 10,
-    colorMode: "none",
-    toSVG,
-  };
+  private _options: AnimatedSignatureOptions;
+  public get options() {
+    return this._options;
+  }
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -125,12 +110,52 @@ export default class AnimatedSignature extends SignaturePad {
     };
     super.clear();
 
+    let _duration: AnimatedSignatureOptions["duration"] = [1000];
+    let _drawingMode: AnimatedSignatureOptions["drawingMode"] = "even";
+    let _gap: AnimatedSignatureOptions["gap"] = 0;
+    let _dotDuration: AnimatedSignatureOptions["dotDuration"] = 10;
+    let _colorMode: AnimatedSignatureOptions["colorMode"] = "none";
+    this._options = {
+      get duration() {
+        return _duration;
+      },
+      set duration(val: AnimatedSignatureOptions["duration"]) {
+        if (isArray(val)) _duration = [...val];
+        else console.warn("warning: this input value of `duration` type valid");
+      },
+      classPrefix: "sign-",
+      animationName: "animatedSignature",
+      backgroundColor: "rgba(0,0,0,0)",
+      get drawingMode() {
+        return _drawingMode;
+      },
+      set drawingMode(val) {
+        if (["parallel", "even"].includes(val)) _drawingMode = val;
+        else _drawingMode = "even";
+      },
+      get gap() {
+        return _gap;
+      },
+      set gap(val) {
+        _gap = val > 0 ? val : 0;
+      },
+      get dotDuration() {
+        return _dotDuration;
+      },
+      set dotDuration(val) {
+        _dotDuration = val > 0 ? val : 0;
+      },
+      get colorMode() {
+        return _colorMode;
+      },
+      set colorMode(val) {
+        if (["before", "none", "after"].includes(val)) _colorMode = val;
+        else val = "none";
+      },
+      toSVG,
+    };
+
     Object.assign(this.options, options);
-    this.options.strokes = Math.max(1, this.options.strokes);
-    this.options.gap = Math.min(
-      Math.max(0, this.options.gap),
-      this.options.strokeDuration
-    );
   }
   /** 开始绘制 */
   handleDraw() {
@@ -173,15 +198,9 @@ export default class AnimatedSignature extends SignaturePad {
   }
 
   calcStyle(record: Array<RecordComposition>) {
-    const {
-      strokeDuration,
-      strokes,
-      classPrefix,
-      drawingMode,
-      colorMode,
-      gap,
-      dotDuration,
-    } = this.options;
+    const { duration, classPrefix, drawingMode, colorMode, gap, dotDuration } =
+      this.options;
+    const strokes = duration.length;
 
     if (drawingMode === "even") {
       const lengths = Array(strokes).fill(0);
@@ -196,17 +215,48 @@ export default class AnimatedSignature extends SignaturePad {
         const relatedIndex = index % strokes;
         if (item.isDot) {
           const { circle } = item.data;
-          const animationDuration =
-            (item.radius / lengths[relatedIndex]) * newDuration;
 
           circle.className += ` ${classPrefix}element ${classPrefix}circle`;
-          circle.style.animationDuration = `${animationDuration}ms`;
+          circle.style.animationDuration = `${dotDuration}ms`;
           circle.style.animationDelay = `${delays[relatedIndex]}ms`;
-          delays[relatedIndex] += animationDuration + gap;
+          delays[relatedIndex] += dotDuration + gap;
         } else {
-          item.data.forEach(({ curve, path, length }) => {
+          item.data.forEach(({ path, length }) => {
             const animationDuration =
-              (length / lengths[relatedIndex]) * newDuration;
+              (length / lengths[relatedIndex]) * duration[relatedIndex];
+
+            path.className += ` ${classPrefix}element ${classPrefix}path`;
+            path.style.animationDuration = `${animationDuration}ms`;
+            path.style.animationDelay = `${delays[relatedIndex]}ms`;
+            delays[relatedIndex] += animationDuration;
+          });
+          delays[relatedIndex] += gap;
+        }
+      });
+    } else if (drawingMode === "parallel") {
+      const times = Array(strokes).fill(0);
+      const delays = Array(strokes).fill(0);
+
+      record.forEach(
+        (item, index) =>
+          !item.isDot && (times[index % strokes] += item.partTime)
+      );
+
+      record.forEach((item, index) => {
+        const relatedIndex = index % strokes;
+        if (item.isDot) {
+          const { circle } = item.data;
+          circle.className += ` ${classPrefix}element ${classPrefix}circle`;
+          circle.style.animationDuration = `${dotDuration}ms`;
+          circle.style.animationDelay = `${delays[relatedIndex]}ms`;
+          delays[relatedIndex] += dotDuration + gap;
+        } else {
+          item.data.forEach(({ curve, path }) => {
+            const animationDuration =
+              ((curve.endPoint.time - curve.startPoint.time) /
+                times[relatedIndex]) *
+              duration[relatedIndex];
+
             path.className += ` ${classPrefix}element ${classPrefix}path`;
             path.style.animationDuration = `${animationDuration}ms`;
             path.style.animationDelay = `${delays[relatedIndex]}ms`;
