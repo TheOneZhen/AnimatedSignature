@@ -1,11 +1,11 @@
-import { uniqueId, isNumber, isArray } from "lodash-es";
 import { Errors } from "./errors";
 import SignaturePad, {
   Options as SignaturePadOptions,
   PointGroup,
   ToSVGOptions,
-  PointGroupOptions,
+  PointGroupOpti  ons,
 } from "signature_pad";
+
 
 import { Bezier } from "signature_pad/src/bezier";
 import { BasicPoint, Point } from "signature_pad/src/point";
@@ -119,7 +119,7 @@ export default class AnimatedSignature extends SignaturePad {
         return _duration;
       },
       set duration(val: AnimatedSignatureOptions["duration"]) {
-        if (isArray(val)) _duration = [...val];
+        if (Array.isArray(val)) _duration = [...val];
         else console.warn("warning: this input value of `duration` type valid");
       },
       classPrefix: "sign-",
