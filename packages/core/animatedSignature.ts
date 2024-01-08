@@ -10,7 +10,6 @@ import SignaturePad, {
 import { Bezier } from "signature_pad/src/bezier";
 import { BasicPoint, Point } from "signature_pad/src/point";
 
-/** 没有校验 */
 export type AnimatedSignatureOptions = {
   /**
    * 每条连线完全显示需要的时间

@@ -1,1 +1,4 @@
-duration
+# todo
+
+1. coloring
+
