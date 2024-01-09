@@ -5,17 +5,15 @@ import SignaturePad, {
   type ToSVGOptions,
   type PointGroupOptions,
 } from "signature_pad";
-
-
-import type { Bezier } from "signature_pad/src/bezier";
-import { type BasicPoint, Point } from "signature_pad/src/point";
+import { Bezier } from "signature_pad/dist/types/bezier";
+import { BasicPoint } from "signature_pad/dist/types/point"
+import { Point } from "signature_pad/src/point";
 
 export type AnimatedSignatureOptions = {
   /**
    * 每条连线完全显示需要的时间
    * each strokes display the time required
-   * @unit ms
-   * @default [10000]
+   * @defaultValue [10000]
    */
   duration: number[];
   /**
@@ -24,32 +22,30 @@ export type AnimatedSignatureOptions = {
   classPrefix: string;
   /**
    * animation name
-   * @default animatedSignature
+   * @defaultValue animatedSignature
    */
   animationName: string;
   /**
    * 背景色
-   * @默认值 rgba(0,0,0,0)
+   * @defaultValue rgba(0,0,0,0)
    */
   backgroundColor: string;
   /**
    * drawing speed mode
-   * @default "even"
+   * @defaultValue "even"
    */
   drawingMode: "even" | "parallel";
   /**
-   * @default 0
-   * @min 0
+   * @defaultValue 0
    */
   gap: number;
   /**
    * dot duration
-   * @default 10
-   * @min 0
+   * @defaultValue 10
    */
   dotDuration: number;
   /**
-   * @default "none"
+   * @defaultValue "none"
    */
   colorMode: "before" | "none" | "after";
   /** 对toSVG进行重写 */
@@ -197,7 +193,7 @@ export default class AnimatedSignature extends SignaturePad {
   }
 
   calcStyle(record: Array<RecordComposition>) {
-    const { duration, classPrefix, drawingMode, colorMode, gap, dotDuration } =
+    const { duration, classPrefix, drawingMode, gap, dotDuration } =
       this.options;
     const strokes = duration.length;
 
@@ -305,7 +301,7 @@ export default class AnimatedSignature extends SignaturePad {
  * 原方法中使用了过多private属性，扩展类中不方便重写且将源码加入扩展类会导致代码繁杂，所以在这里单独写出
  * 用户也可以对此方法进行重写
  */
-function toSVG({ includeBackgroundColor = false }: ToSVGOptions = {}) {
+export function toSVG({ includeBackgroundColor = false }: ToSVGOptions = {}) {
   const pointGroups = this._data;
   const ratio = Math.max(window.devicePixelRatio || 1, 1);
   const minX = 0;
