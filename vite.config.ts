@@ -6,7 +6,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "src/animatedSignature.ts"),
       name: "z-animated-signature",
-      fileName: "ZAnimatedSignature"
+      fileName: "ZAnimatedSignature",
     },
   },
 });

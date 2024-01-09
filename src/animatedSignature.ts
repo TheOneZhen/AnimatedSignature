@@ -1,14 +1,14 @@
 import { Errors } from "./errors";
 import SignaturePad, {
-  Options as SignaturePadOptions,
-  PointGroup,
-  ToSVGOptions,
-  PointGroupOptions,
+  type Options as SignaturePadOptions,
+  type PointGroup,
+  type ToSVGOptions,
+  type PointGroupOptions,
 } from "signature_pad";
 
 
-import { Bezier } from "signature_pad/src/bezier";
-import { BasicPoint, Point } from "signature_pad/src/point";
+import type { Bezier } from "signature_pad/src/bezier";
+import { type BasicPoint, Point } from "signature_pad/src/point";
 
 export type AnimatedSignatureOptions = {
   /**

@@ -22,6 +22,8 @@
     "esModuleInterop": true,
     "removeComments": false,
     "lib": ["ESNext", "DOM"],
-    "declaration": false
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "emitDeclarationOnly": true
   }
 }

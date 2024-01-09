@@ -6,7 +6,7 @@
   ],
   "main": "./dist/ZAnimatedSignature.umd.cjs",
   "module": "./dist/ZAnimatedSignature.js",
-  "types": "./dist",
+  "types": "./dist/animatedSignature.d.ts",
   "exports": {
     ".": {
       "import": "./dist/ZAnimatedSignature.js",
@@ -15,22 +15,21 @@
     "./dist/*": "./dist/*",
     "./package.json": "./package.json"
   },
-  "packageManager": "pnpm@8.12.1",
   "engines": {
     "node": ">=18",
     "npm": ">=8"
   },
   "scripts": {
     "start": "vite",
-    "build": "vite build"
+    "build": "vite build && npm run emit-types",
+    "emit-types": "tsc"
   },
   "devDependencies": {
+    "@types/node": "^20.10.7",
     "prettier": "^3.1.1",
     "typescript": "~5.3.3",
-    "@types/node": "^20.10.7",
     "vite": "^5.0.10"
   },
-  "browserslist": [],
   "dependencies": {
     "signature_pad": "^4.1.7"
   }
