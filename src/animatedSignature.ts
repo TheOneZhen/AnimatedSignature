@@ -3,7 +3,7 @@ import SignaturePad, {
   Options as SignaturePadOptions,
   PointGroup,
   ToSVGOptions,
-  PointGroupOpti  ons,
+  PointGroupOptions,
 } from "signature_pad";
 
 

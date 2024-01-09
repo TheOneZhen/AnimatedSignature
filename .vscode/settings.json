@@ -1,6 +1,3 @@
 {
-  "[markdown]": {
-    "editor.tabSize": 4
-  },
-  "markdown.extension.list.indentationSize": "inherit"
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
