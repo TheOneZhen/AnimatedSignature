@@ -54,7 +54,7 @@ export type AnimatedSignatureOptions = {
    * doodle color mode
    * @defaultValue "none"
    */
-  colorMode: "before" | "none" | "after";
+  // colorMode: "before" | "none" | "after";
   /**
    * 重写`signature_pad`提供的转换SVG的方法
    * overwrite the method of converting SVG provided by signature_pad

@@ -43,7 +43,7 @@ export default class AnimatedSignature extends SignaturePad {
     let _drawingMode: AnimatedSignatureOptions["drawingMode"] = "even";
     let _gap: AnimatedSignatureOptions["gap"] = 0;
     let _dotDuration: AnimatedSignatureOptions["dotDuration"] = 10;
-    let _colorMode: AnimatedSignatureOptions["colorMode"] = "none";
+    // let _colorMode: AnimatedSignatureOptions["colorMode"] = "none";
     this._options = {
       get duration() {
         return _duration;
@@ -74,13 +74,13 @@ export default class AnimatedSignature extends SignaturePad {
       set dotDuration(val) {
         _dotDuration = val > 0 ? val : 0;
       },
-      get colorMode() {
-        return _colorMode;
-      },
-      set colorMode(val) {
-        if (["before", "none", "after"].includes(val)) _colorMode = val;
-        else val = "none";
-      },
+      // get colorMode() {
+      //   return _colorMode;
+      // },
+      // set colorMode(val) {
+      //   if (["before", "none", "after"].includes(val)) _colorMode = val;
+      //   else val = "none";
+      // },
       toSVG,
     };
 
