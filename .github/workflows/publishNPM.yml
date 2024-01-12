@@ -15,7 +15,7 @@ jobs:
 
       - run: npm ci  
       - run: npm run build:dts
-        run: cd ./dist/
+      - run: cd ./dist/
         
       - uses: peaceiris/actions-gh-pages@v3
       - run: npm publish || true
