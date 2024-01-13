@@ -14,7 +14,7 @@
   "author": "zhenisbusy <zhenisbusy@qq.com> (https://zhenisbusy.space)",
   "repository": {
     "type": "git",
-    "url": "git@github.com:TheOneZhen/ZAnimatedSignature.git"
+    "url": "git+ssh://git@github.com/TheOneZhen/ZAnimatedSignature.git"
   },
   "type": "module",
   "files": [
