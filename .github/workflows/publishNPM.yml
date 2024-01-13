@@ -17,7 +17,6 @@ jobs:
       - run: npm run build:dts
       - run: cd ./dist/
         
-      - uses: peaceiris/actions-gh-pages@v3
       - run: npm publish || true
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
