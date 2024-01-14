@@ -17,5 +17,5 @@ jobs:
       - run: npm ci  
       - run: npm run build:dts
       - run: |
-        cd dist
-        ls
+          cd dist
+          ls
