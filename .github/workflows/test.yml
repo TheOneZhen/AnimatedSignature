@@ -16,6 +16,6 @@ jobs:
 
       - run: npm ci  
       - run: npm run build:dts
-      - run: cd ./dist/
+      - run: cd dist
       - run: pwd
       - run: ls
