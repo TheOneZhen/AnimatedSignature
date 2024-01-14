@@ -18,9 +18,9 @@ jobs:
 
       - run: npm ci  
       - run: npm run build:dts
-      - run: cd ./dist/
-        
-      - run: npm publish
+      - run: |
+          cd dist
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
