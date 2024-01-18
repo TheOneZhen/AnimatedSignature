@@ -13,7 +13,7 @@
 
   "dtsRollup": {
     "enabled": true,
-    "untrimmedFilePath": "./dist/<unscopedPackageName>.d.ts"
+    "untrimmedFilePath": "./dist/ZAnimatedSignature.d.ts"
   },
 
   "tsdocMetadata": {
