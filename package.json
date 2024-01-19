@@ -1,32 +1,32 @@
 {
-  "name": "z-animated-signature",
+  "name": "animated-signature",
   "version": "0.0.1",
   "description": "This is a small tool used to generate animated signature code and its inspiration comes from @antfu's article 'Animated Svg Logo'(https://antfu.me/posts/animated-svg-logo).",
   "keywords": [
     "signature_pad",
     "animation"
   ],
-  "homepage": "https://zhenisbusy.space/stations/z-animated-signature",
+  "homepage": "https://zhenisbusy.space/stations/animated-signature",
   "bugs": {
-    "url": "https://github.com/TheOneZhen/ZAnimatedSignature/issues",
+    "url": "https://github.com/TheOneZhen/AnimatedSignature/issues",
     "email": "zhenisbusy@qq.com"
   },
   "author": "zhenisbusy <zhenisbusy@qq.com> (https://zhenisbusy.space)",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/TheOneZhen/ZAnimatedSignature.git"
+    "url": "git+ssh://git@github.com/TheOneZhen/AnimatedSignature.git"
   },
   "type": "module",
   "files": [
     "*"
   ],
-  "main": "./ZAnimatedSignature.umd.cjs",
-  "module": "./ZAnimatedSignature.js",
-  "types": "./ZAnimatedSignature.d.ts",
+  "main": "./dist/AnimatedSignature.umd.cjs",
+  "module": "./dist/AnimatedSignature.js",
+  "types": "./dist/AnimatedSignature.d.ts",
   "exports": {
     ".": {
-      "import": "./ZAnimatedSignature.js",
-      "require": "./ZAnimatedSignature.umd.cjs"
+      "import": "./dist/AnimatedSignature.js",
+      "require": "./dist/AnimatedSignature.umd.cjs"
     },
     "./package.json": "./package.json"
   },

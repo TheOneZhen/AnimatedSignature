@@ -138,7 +138,7 @@ export default class AnimatedSignature extends SignaturePad {
   }
   /**
    *
-   * @param toSVGOptions
+   * @param toSVGOptions - transfrom to svg options
    * @returns it contains SVGSVGELement and HTMLStyleElement, you can use `dom.outHTML` get the HTML
    */
   generateCode(toSVGOptions: ToSVGOptions = {}) {
