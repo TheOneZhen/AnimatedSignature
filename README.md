@@ -17,3 +17,13 @@ npm install Z-Animated-Signature
 ``` ts
 import {} from ''
 ```
+
+# function
+
+## generate svg + css
+
+# todo list
+
+- coloring strokes
+
+Selecting a cololred pen allows for the coloring of strokes while achieving various effects, such as parallel display.
