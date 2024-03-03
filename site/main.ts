@@ -1,26 +1,22 @@
-import { AnimatedSignature } from "src/animatedSignature";
+import { AnimatedSignature } from "../src/animatedSignature";
 
-const app = document.getElementById("app");
-
-if (!app) throw new Error("App not exist!");
-
-const canvas = document.createElement("canvas");
-const preview = document.createElement("div");
+const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+const buttons = document.getElementById("buttons")!;
+const preview = document.getElementById("preview")!;
 
 const animatedSignature = new AnimatedSignature(
   canvas,
   {
-    duration: [2000],
-    gap: 1000,
+    duration: [1000],
+    gap: 0,
     drawingMode: "parallel",
   },
-  {}
+  {
+    backgroundColor: "white"
+  }
 );
 
-const buttons = document.createElement("div");
-
 function addButton(
-  container = buttons,
   innerHTML: string,
   onclick: (e: MouseEvent) => void
 ) {
@@ -28,15 +24,12 @@ function addButton(
 
   button.innerHTML = innerHTML;
   button.onclick = onclick;
-  container.appendChild(button);
+  buttons.appendChild(button);
 }
 
-app.appendChild(canvas);
-app.appendChild(buttons);
-app.appendChild(preview);
-addButton(buttons, "预览", (e) => {
+addButton("preview", (e) => {
   const { svg, style } = animatedSignature.generateSVGAndStyle();
 
-  preview.innerHTML = svg.innerHTML;
+  preview.innerHTML = svg.outerHTML;
   document.head.appendChild(style);
 });

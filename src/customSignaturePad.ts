@@ -28,7 +28,7 @@ export class CustomSignaturePad extends SignatureEventTarget {
   /**
    * Adding a background color to the canvas has no effect when `ctx.compositeOperation = 'source-atop'`!
    */
-  public backgroundColor: string = "";
+  public backgroundColor: string;
   public throttle: number;
 
   // private stuff(origin)
@@ -57,7 +57,7 @@ export class CustomSignaturePad extends SignatureEventTarget {
     ) as number; // in pixels
     this.dotSize = options.dotSize || 0;
     this.penColor = options.penColor || "black";
-    // this.backgroundColor = options.backgroundColor || "rgba(0,0,0,0)";
+    this.backgroundColor = options.backgroundColor || "rgba(0,0,0,0)";
     this.compositeOperation = options.compositeOperation || "source-over";
 
     this._strokeMoveUpdate = this.throttle
@@ -75,7 +75,7 @@ export class CustomSignaturePad extends SignatureEventTarget {
     const { _ctx: ctx, canvas } = this;
 
     // Clear canvas using background color
-    // ctx.fillStyle = this.backgroundColor;
+    ctx.fillStyle = this.backgroundColor;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 

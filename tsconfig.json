@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "site/*"],
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": ".",

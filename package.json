@@ -38,7 +38,7 @@
     "npm": ">=8"
   },
   "scripts": {
-    "start": "vite",
+    "start": "vite serve",
     "build": "vite build",
     "build:dts": "npm run build && tsc && api-extractor run --local --verbose && rimraf ./dist/src"
   },
