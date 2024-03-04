@@ -7,7 +7,6 @@ import type {
 } from "signature_pad";
 
 import type { AnimatedSignatureOptions, RecordComposition } from "./types";
-import { toSVG } from "./utils";
 import { CustomSignaturePad } from "./customSignaturePad";
 import { BasicPoint, Point } from "signature_pad/src/point";
 import { Bezier } from "signature_pad/src/bezier";
@@ -34,7 +33,6 @@ export class AnimatedSignature extends CustomSignaturePad {
     let _drawingMode: AnimatedSignatureOptions["drawingMode"] = "even";
     let _gap: AnimatedSignatureOptions["gap"] = 0;
     let _dotDuration: AnimatedSignatureOptions["dotDuration"] = 10;
-    let _colorMode: AnimatedSignatureOptions["colorMode"] = "none";
 
     this._options = {
       get duration() {
@@ -46,7 +44,6 @@ export class AnimatedSignature extends CustomSignaturePad {
       },
       classPrefix: "sign-",
       animationName: "animatedSignature",
-      backgroundColor: "rgba(0,0,0,0)",
       get drawingMode() {
         return _drawingMode;
       },
@@ -65,15 +62,7 @@ export class AnimatedSignature extends CustomSignaturePad {
       },
       set dotDuration(val) {
         _dotDuration = val > 0 ? val : 0;
-      },
-      get colorMode() {
-        return _colorMode;
-      },
-      set colorMode(val) {
-        if (["before", "none", "after"].includes(val)) _colorMode = val;
-        else val = "none";
-      },
-      toSVG,
+      }
     };
 
     Object.assign(this.options, options);
@@ -89,13 +78,6 @@ export class AnimatedSignature extends CustomSignaturePad {
    */
   handleDrawing() {
     this.compositeOperation = "source-over";
-  }
-  /**
-   * 签名上色
-   * coloring
-   */
-  handleColoring() {
-    this.compositeOperation = "source-atop";
   }
   /**
    * 改变画笔颜色
@@ -135,7 +117,7 @@ export class AnimatedSignature extends CustomSignaturePad {
   }
 
   generateSVG({ includeBackgroundColor }: ToSVGOptions = {}, record: RecordComposition[]) {
-    const pointGroups = this._data;
+    const pointGroups = this.toData();
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
     const minX = 0;
     const minY = 0;

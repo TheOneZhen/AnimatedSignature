@@ -1,7 +1,7 @@
 import type { PointGroupOptions } from "signature_pad";
 import type { Bezier } from "signature_pad/src/bezier";
 import type { BasicPoint } from "signature_pad/dist/types/point";
-import type { toSVG } from "./utils";
+
 /**
  * 配置
  * animated signature options
@@ -26,12 +26,6 @@ export type AnimatedSignatureOptions = {
    */
   animationName: string;
   /**
-   * 背景色
-   * background color
-   * @defaultValue "rgba(0,0,0,0)"
-   */
-  backgroundColor: string;
-  /**
    * 绘制模式
    * drawing speed mode
    * @defaultValue "even"
@@ -50,16 +44,11 @@ export type AnimatedSignatureOptions = {
    */
   dotDuration: number;
   /**
-   * 涂鸦颜色模式
-   * doodle color mode
+   * 涂鸦颜色模式（待做）
+   * doodle color mode(todo)
    * @defaultValue "none"
    */
-  colorMode: "before" | "none" | "after";
-  /**
-   * 重写`signature_pad`提供的转换SVG的方法
-   * overwrite the method of converting SVG provided by signature_pad
-   */
-  toSVG: typeof toSVG;
+  // colorMode: "before" | "none" | "after";
 };
 /**
  * 在转换SVG图片时记录转换过程中需要在后续用到的数据

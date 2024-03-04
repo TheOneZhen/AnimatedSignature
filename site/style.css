@@ -4,7 +4,7 @@
 
 #container #buttons {
   display: flex;
-
+  gap: 1rem;
 }
 
 #container #buttons button {

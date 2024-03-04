@@ -16,6 +16,8 @@ const animatedSignature = new AnimatedSignature(
   }
 );
 
+(window as any).animatedSignature = animatedSignature
+
 function addButton(
   innerHTML: string,
   onclick: (e: MouseEvent) => void
@@ -27,9 +29,31 @@ function addButton(
   buttons.appendChild(button);
 }
 
+function generateRandomColor () {
+  const r = Math.round(Math.random() * 255);
+  const g = Math.round(Math.random() * 255);
+  const b = Math.round(Math.random() * 255);
+  return "rgb(" + r + "," + g + "," + b +")";
+}
+
 addButton("preview", (e) => {
   const { svg, style } = animatedSignature.generateSVGAndStyle();
 
   preview.innerHTML = svg.outerHTML;
-  document.head.appendChild(style);
+  preview.appendChild(style)
 });
+
+addButton("clear", () => {
+  animatedSignature.clear()
+})
+
+addButton('changeColor', () => {
+  animatedSignature.changePenColor(generateRandomColor())
+})
+
+addButton('generateAnimatedSVGCode', () => {
+  const { svg, style } = animatedSignature.generateSVGAndStyle({ includeBackgroundColor: true })
+
+  preview.innerHTML = svg.outerHTML
+  preview.appendChild(style)
+})
