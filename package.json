@@ -51,6 +51,6 @@
     "vite": "^5.0.10"
   },
   "peerDependencies": {
-    "signature_pad": "^4.1.7"
+    "signature_pad": "^5.0.0"
   }
 }
