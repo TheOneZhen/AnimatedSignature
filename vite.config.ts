@@ -3,13 +3,11 @@ import { UserConfig, defineConfig } from "vite";
 
 export default defineConfig(({ command }) => {
   const config: UserConfig = {};
-
   if (command === "serve") {
-    config.build = {
-      rollupOptions: {
-        input: {
-          site: resolve(__dirname, "site/index.html"),
-        },
+    config.root = resolve(__dirname, "site");
+    config.server = {
+      fs: {
+        allow: [__dirname],
       },
     };
   }
