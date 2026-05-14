@@ -109,11 +109,12 @@ export class AnimatedSignature extends CustomSignaturePad {
 
   generateSVGAndStyle(toSVGOptions: ToSVGOptions = {}) {
     const record: RecordComposition[] = [];
+    const svg = this.generateSVG(toSVGOptions, record);
+    const style = this.generateStyle(record);
 
-    return {
-      svg: this.generateSVG(toSVGOptions, record),
-      style: this.generateStyle(record)
-    }
+    svg.insertBefore(style, svg.firstChild);
+
+    return svg
   }
 
   generateSVG({ includeBackgroundColor }: ToSVGOptions = {}, record: RecordComposition[]) {

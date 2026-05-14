@@ -1,28 +1,75 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Animated Signature Demo</title>
-    <meta
-      name="description"
-      content="Animated Signature - Based on Signature-pad generate animated svg + css code."
-    />
 
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"
-    />
+<head>
+  <meta charset="utf-8" />
+  <title>Animated Signature Demo</title>
+  <meta name="description" content="Animated Signature - Based on Signature-pad generate animated svg + css code." />
 
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <div id="container">
-      <canvas id="canvas"></canvas>
-      <div id="buttons"></div>
-      <div id="preview"></div>
-    </div>
-    <script type="module" src="./main.ts"></script>
-  </body>
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <main class="app">
+    <section class="workspace" aria-label="Signature workspace">
+      <div class="panel signature-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Sign above</h2>
+            <p>Use your mouse, pen, or finger.</p>
+          </div>
+          <span id="status" aria-live="polite">Ready</span>
+        </div>
+
+        <canvas id="canvas" aria-label="Signature canvas"></canvas>
+
+        <div class="toolbar" aria-label="Signature actions">
+          <button id="clear" type="button">Clear</button>
+          <button id="undo" type="button">Undo</button>
+          <button id="redo" type="button">Redo</button>
+        </div>
+
+        <div class="toolbar options" aria-label="Drawing options">
+          <label>
+            Pen color
+            <input id="pen-color" type="color" value="#111827" />
+          </label>
+          <label>
+            Width
+            <input id="pen-width" type="range" min="1" max="8" value="3" />
+          </label>
+          <label>
+            Background
+            <input id="background-color" type="color" value="#ffffff" />
+          </label>
+        </div>
+
+        <div class="toolbar" aria-label="Save actions">
+          <button id="save-png" type="button">Save as PNG</button>
+          <button id="save-jpg" type="button">Save as JPG</button>
+          <button id="save-svg" type="button">Save as SVG</button>
+          <button id="save-svg-bg" type="button">SVG with background</button>
+        </div>
+      </div>
+
+      <div class="panel preview-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Animated preview</h2>
+            <p>Generate and replay the animated SVG.</p>
+          </div>
+          <button id="preview-button" type="button">Preview</button>
+        </div>
+        <div id="preview" aria-label="Animated signature preview"></div>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="./main.ts"></script>
+</body>
+
 </html>
